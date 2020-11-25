@@ -16,14 +16,6 @@ WEBSITE_DOMAIN_CHS = "www.bbkz.com"
 API_DOMAIN_CHT = "f.bbkz.net"
 API_DOMAIN_CHS = "f1.bbkz.net"
 
-def mkdir(filename):
-    if not os.path.exists(os.path.dirname(filename)):
-        try:
-            os.makedirs(os.path.dirname(filename))
-        except OSError as exc: 
-            pass # Guard against race condition
-            if exc.errno != errno.EEXIST:
-                raise
 
 def cht_to_chs(src):
     ret = ""
@@ -75,10 +67,11 @@ def localize_res(root_path):
             dest.write("}")
                 
     for code in CHS_COUNTRY_CODES:
-        path = os.path.join(root_path, "%s.lproj/Localizable.strings" % (code))
-        mkdir(path)
-        strings_chs = get_string_map(path)
-        with open(path, "w") as dest:
+        locale_dir = os.path.join(root_path, "%s.lproj" % (code))
+        filename = os.path.join(locale_dir, "Localizable.strings")
+        Path(locale_dir).mkdir(parents=True, exist_ok=True)
+        strings_chs = get_string_map(filename)
+        with open(filename, "w") as dest:
             for key, value in sorted(localizable_cht.items()):
                 if key in strings_chs:
                     value = strings_chs[key]
@@ -87,9 +80,10 @@ def localize_res(root_path):
                 dest.write("\"%s\" = \"%s\";\n" % (key, value))
                     
     for code in CHT_COUNTRY_CODES:
-        path = os.path.join(root_path, "%s.lproj/Localizable.strings" % (code))
-        mkdir(path)
-        with open(path, "w") as dest:
+        locale_dir = os.path.join(root_path, "%s.lproj" % (code))
+        filename = os.path.join(locale_dir, "Localizable.strings")
+        Path(locale_dir).mkdir(parents=True, exist_ok=True)
+        with open(filename, "w") as dest:
             for key, value in sorted(localizable_cht.items()):
                 dest.write("\"%s\" = \"%s\";\n" % (key, value))
 
@@ -101,10 +95,11 @@ def localize_view(root, f):
 
         localizable_cht = get_string_map(cht)        
         for code in CHS_COUNTRY_CODES:
-            path = os.path.join(os.path.dirname(dirname), code + ".lproj", fname + ".strings")
-            mkdir(path)
-            strings_chs = get_string_map(path)
-            with open(path, "w") as dest:
+            locale_dir = Path(dirname).parent
+            filename = os.path.join(locale_dir, code + ".lproj", fname + ".strings")
+            Path(locale_dir).mkdir(parents=True, exist_ok=True)
+            strings_chs = get_string_map(filename)
+            with open(filename, "w") as dest:
                 for key, value in sorted(localizable_cht.items()):
                     if key in strings_chs:
                         value = strings_chs[key]
