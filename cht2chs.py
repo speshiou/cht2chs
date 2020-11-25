@@ -1,7 +1,8 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 import os, sys, getopt, fnmatch, re
 from pathlib import Path
 import zh_converter as zc
+import cht2chs_flutter as cc_flutter
 
 CHS_COUNTRY_CODES = [ "zh-Hans" ]
 CHT_COUNTRY_CODES = [ "zh-Hant" ]
@@ -110,4 +111,8 @@ if __name__ == '__main__':
     if not d:
         print("Please specify working directory")
         exit(1)
-    localize(d)
+    if os.path.isfile(os.path.join(d, 'pubspec.yaml')):
+        # flutter project
+        cc_flutter.cht2chs(d)
+    else:
+        localize(d)
