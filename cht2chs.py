@@ -3,6 +3,7 @@ import os, sys, getopt, fnmatch, re
 from pathlib import Path
 import zh_converter as zc
 import cht2chs_flutter as cc_flutter
+import cht2chs_android as cc_android
 
 CHS_COUNTRY_CODES = [ "zh-Hans" ]
 CHT_COUNTRY_CODES = [ "zh-Hant" ]
@@ -113,6 +114,13 @@ if __name__ == '__main__':
         exit(1)
     if os.path.isfile(os.path.join(d, 'pubspec.yaml')):
         # flutter project
+        print("Flutter proejct: %s" % (d))
         cc_flutter.cht2chs(d)
-    else:
+    elif os.path.isfile(os.path.join(d, 'build.gradle')):
+        # android project
+        print("Android proejct: %s" % (d))
+        cc_android.cht2chs(d)
+    elif os.path.isfile(os.path.join(d, 'Podfile')):
+        print("iOS proejct: %s" % (d))
+        # iOS project
         localize(d)
