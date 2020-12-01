@@ -11,5 +11,5 @@ Run `pip3 install -r requirements.txt -t pylib` to install dependencies.
 
 ## Usage
 ```bash
-python3 cht2chs -d $PROJECT_DIRECTORY
+python3 cht2chs.py -d $PROJECT_DIRECTORY
 ```
