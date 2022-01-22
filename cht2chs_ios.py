@@ -6,6 +6,8 @@ import zh_converter as zc
 CHS_COUNTRY_CODES = [ "zh-Hans" ]
 CHT_COUNTRY_CODES = [ "zh-Hant" ]
 
+EXCLUDE_DIRS = [ "Pods" ]
+
 def _get_string_map(filepath):
     p = re.compile(r"\"(.*)\".*=.*\"(.*)\";")
     strings = {}
@@ -80,6 +82,7 @@ def _localize_view(root, f):
 
 def cht2chs(root_path):
     for root, dirs, files in os.walk(root_path):
+        dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS]
         for f in files:
             if fnmatch.fnmatch(f, "*.storyboard") or fnmatch.fnmatch(f, "*.xib"):
                 _localize_view(root, f)
